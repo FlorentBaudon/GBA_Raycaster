@@ -6,7 +6,7 @@ DEVKITPRO=$(DevKitGBA)
 GBATOOLS=$(GbaTools)
 
 CC=$(DEVKITPRO)arm-none-eabi-g++
-CFLAG= -mthumb -mthumb-interwork
+CFLAG=-O3 -mthumb -mthumb-interwork
 INCL = -Isource/
 
 TARGET=TestGBA
@@ -19,7 +19,7 @@ SRC=$(subst $(SRCDIR), ,$(wildcard $(SRCDIR)*.cpp))
 
 OBJ=$(SRC:.cpp=.o)
 
-all : $(TARGET)
+all : directories $(TARGET)
 
 start : all
 	./VisualBoyAdvance.exe $(OUTDIR)$(TARGET).gba
@@ -30,7 +30,7 @@ $(TARGET) : $(TARGET).elf
 	./VisualBoyAdvance.exe $(OUTDIR)$(TARGET).gba
 
 $(TARGET).elf : $(OBJ)
-	$(CC) -specs=gba.specs $(CFLAG) $(foreach o,$^,$(BINDIR)$(o)) -o $(BINDIR)$@
+	$(CC) -specs=gba.specs $(foreach o,$^,$(BINDIR)$(o)) -o $(BINDIR)$@
 
 %.o : $(SRCDIR)%.cpp
 	$(CC) $(CFLAG) $(INCL) -o $(BINDIR)$@ -c $<

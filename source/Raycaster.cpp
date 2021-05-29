@@ -134,7 +134,7 @@ vec2 Raycaster::drawRaycast(vec2 pos, float angle, bool bDebug)
 	return (dH < dV) ? pH : pV;
 }
 
-void Raycaster::scanEnv(volatile short* buffer, const vec2 pos, const float angle, const float fov)
+void Raycaster::scanEnv(unsigned volatile short* buffer, const vec2 pos, const float angle, const float fov)
 {
 	const float r_angle = angle + fov / 2;
 

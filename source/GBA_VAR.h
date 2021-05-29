@@ -1,18 +1,19 @@
+#pragma once
 // Type redifinition (it's just syntactic sugar)
-// typedef unsigned char      uint8;
-// typedef unsigned short     uint16;
-// typedef unsigned int       uint32;
+typedef unsigned char      uint8;
+typedef unsigned short     uint16;
+typedef unsigned long      uint32;
 
 // Registers
-#define DISPLAYCONTROL	*((volatile long*) 	0x04000000)
-#define KEYSTATE		*((volatile long*) 	0x04000130)
-#define VCOUNT			*((volatile short*) 	0x04000006)
+#define DISPLAYCONTROL	*((volatile unsigned long*) 	 0x04000000)
+#define KEYSTATE		*((volatile unsigned long*) 	 0x04000130)
+#define VCOUNT			*((volatile unsigned short*) 	 0x04000006)
 
 // Memory
-#define SCREENBUFFER	((volatile short*)		0x06000000)
-#define PALETTE			((volatile short*)		0x05000000)
-#define FRONT_BUFFER    ((volatile short*)      0x06000000)
-#define BACK_BUFFER     ((volatile short*)      0x0600A000)
+#define SCREENBUFFER	((volatile unsigned short*)		 0x06000000)
+#define PALETTE			((volatile unsigned short*)		 0x05000000)
+#define FRONT_BUFFER    ((volatile unsigned short*)      0x06000000)
+#define BACK_BUFFER     ((volatile unsigned short*)      0x0600A000)
 
 //Screen size
 #define WIDTH	240

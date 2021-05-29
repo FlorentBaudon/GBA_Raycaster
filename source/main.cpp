@@ -38,7 +38,7 @@ int map[] =
 Raycaster* raycaster;
 
 
-volatile short* swap_buffer(volatile short* buffer_to_show)
+unsigned volatile short* swap_buffer(unsigned volatile short* buffer_to_show)
 {
 	//On affiche le buffer dans lequel on a ecrit precedentment et on retourne l'autre buffer pour ecrire dedans au prochain cycle
 	if(buffer_to_show == FRONT_BUFFER)
@@ -100,7 +100,7 @@ int main()
 	int red = add_color(31,0,0, next_palette_index);
 	int dark_red = add_color(20,0,0, next_palette_index);
 
-	volatile short* current_buffer = FRONT_BUFFER;
+	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
 	clear_screen(FRONT_BUFFER, black);
 	clear_screen(BACK_BUFFER, black);
