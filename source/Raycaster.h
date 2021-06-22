@@ -1,3 +1,4 @@
+#pragma once
 class Raycaster
 {
 	/**** Members ****/
@@ -12,11 +13,11 @@ class Raycaster
 	/**** Functions ****/
 	public :
 		Raycaster(int cellSize, int* map, int mapSizeX, int mapSizeY, float fov, int xResolution, int yResolution);
-		void scanEnv(unsigned volatile short* buffer, const glm::vec2 pos, const float angle, const float fov);
+		void scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, const float angle, const float fov);
 	private :
-		int checkCellValue(glm::vec2 p);
-		glm::vec2 findHorizontalIntersect(glm::vec2 pos, float angle);
-		glm::vec2 findVerticalIntersect(glm::vec2 pos, float angle);
-		glm::vec2 drawRaycast(glm::vec2 pos, float angle, bool bDebug = false);
+		int checkCellValue(gba::vec2 p);
+		gba::vec2 findHorizontalIntersect(gba::vec2 pos, float angle);
+		gba::vec2 findVerticalIntersect(gba::vec2 pos, float angle);
+		gba::vec2 drawRaycast(gba::vec2 pos, float angle, bool bDebug = false);
 };
 

@@ -1,8 +1,9 @@
 #pragma once
 
-#define PI 3.14159265358979323846264338327950288
+#define PI 3.141592653f//58979323846264338327950288
 #define DEG2RAD(x) ( (x)*( PI/ 180.f ) )
 #define RAD2DEG(x) ( (x)*( 180.f/ PI ) )
+#define FIXEDPOINT 12
 
 namespace gba 
 {
@@ -36,10 +37,15 @@ namespace gba
         float y;
     };
 
+    //convert functions
+    unsigned short floatToFixed(float n);
+    float fixedToFloat(unsigned short n);
+    unsigned short radToLut(float a);
+
     float sin(float a);
     float cos(float a);
     float tan(float a);
     int floor(float n);
-    float vec_length(vec2 v);
+    float length(vec2 v);
     // float sqrt(float a);
 }
