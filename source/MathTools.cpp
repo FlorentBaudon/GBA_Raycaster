@@ -61,4 +61,11 @@ unsigned short gba::radToLut(float angle)
     return (unsigned short) a;
 }
 
+gba::vec2 gba::rotateVectorRad(vec2 v, float a) 
+{
+    float s = gba::sin(a);
+    float c = gba::cos(a);
+    return vec2(c * v.x  - s * v.y, s * v.x - c * v.y);
+}
+
 

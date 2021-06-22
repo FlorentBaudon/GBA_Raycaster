@@ -51,32 +51,32 @@ void vblank()
 	while(VCOUNT<160) {};
 }
 
-// void process_input (Player* p) 
-// {
-// 		float s = 5.0f;
-// 		vec2 d = vec2(0, 0);
+void process_input (Player* p) 
+{
+		float s = 5.0f;
+		vec2 d = vec2(0, 0);
 
-// 		if ((KEYSTATE & KEY_UP) == 0)
-// 		{
-// 			d.y-=s;
-// 		}
-// 		if ((KEYSTATE & KEY_DOWN) == 0)
-// 		{
-// 			d.y+=s;
-// 		}
-// 		if ((KEYSTATE & KEY_LEFT) == 0)
-// 		{
-// 			d.x-=s;
-// 			// player->turn(  radians(10.0f) );
-// 		}
-// 		if ((KEYSTATE & KEY_RIGHT) == 0)
-// 		{
-// 			d.x+=s;
-// 			// player->turn( -radians(10.0f) );
-// 		}
+		if ((KEYSTATE & KEY_UP) == 0)
+		{
+			d.y-=s;
+		}
+		if ((KEYSTATE & KEY_DOWN) == 0)
+		{
+			d.y+=s;
+		}
+		if ((KEYSTATE & KEY_LEFT) == 0)
+		{
+			//d.x-=s;
+			player->turn(  DEG2RAD(10.0f) );
+		}
+		if ((KEYSTATE & KEY_RIGHT) == 0)
+		{
+			//d.x+=s;
+			player->turn( -DEG2RAD(10.0f) );
+		}
 
-// 		player->move(d);
-// }
+		player->move(d);
+}
 
 int main()
 {
@@ -106,7 +106,7 @@ int main()
 		// draw_rect(current_buffer, player->position.x-1,player->position.y-1,12,12, black);
 
 		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
-		//process_input(player);
+		process_input(player);
 
 		// draw_rect(current_buffer, player->position.x,player->position.y,10,10, green);
 
