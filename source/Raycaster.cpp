@@ -1,6 +1,7 @@
 #include "MathTools.h"
 #include "Raycaster.h"
 #include "GBADrawTools.h"
+#include "GBA_VAR.h"
 
 Raycaster::Raycaster(int cellSize, int* map, int mapSizeX, int mapSizeY, float fov, int xResolution, int yResolution) 
 {
