@@ -18,18 +18,18 @@
 
 asm_clear_screen:
 
-	@ push    {r4, lr}
+	push    {r4, lr}
 
 	mov r5, #0x6000000
 	mov r6, #0xFF
 	mov r7, #0x9600
 
 loop:
-	strh r6, [r5]
+	strh r0, [r5]
 	add r5,r5,#2
 	sub r7, r7, #1
 	bne loop
 
-    @ pop     {r4}
-    @ pop     {r3}
-    @ bx  r3
+    pop     {r4}
+    pop     {r3}
+    bx  r3

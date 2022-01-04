@@ -1,3 +1,5 @@
 /bin
 /build
 vba.ini
+*.elf
+*.gba

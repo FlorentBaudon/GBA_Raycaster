@@ -7,7 +7,7 @@
 
 using namespace gba;
 
-extern "C" void asm_clear_screen() CODE_IN_IWRAM;
+extern "C" void asm_clear_screen(unsigned short color) CODE_IN_IWRAM;
 
 vec2 world_forward = vec2(1,0);
 vec2 world_right = vec2(0, 1);
@@ -103,31 +103,31 @@ int main()
 
 	int pX = 20, pY = 10;
 
-	asm_clear_screen();
-
-	while(1)
-	{
-		// clear_screen(current_buffer, dark_red);
-
-		asm_clear_screen();
-
-		vblank();
-
-		// current_buffer = swap_buffer(current_buffer);
-	}
+	asm_clear_screen(0xFF);
 
 	// while(1)
 	// {
-	// 	// draw_rect(current_buffer, player->position.x-1,player->position.y-1,12,12, black);
-	// 	// clear_screen(current_buffer, black);
-	// 	raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
-	// 	process_input(player);
+	// 	// clear_screen(current_buffer, dark_red);
 
-	// 	// draw_rect(current_buffer, player->position.x,player->position.y,10,10, green);
+	// 	asm_clear_screen(0xFF);
 
 	// 	vblank();
 
-	// 	current_buffer = swap_buffer(current_buffer);
+	// 	// current_buffer = swap_buffer(current_buffer);
 	// }
+
+	while(1)
+	{
+		// draw_rect(current_buffer, player->position.x-1,player->position.y-1,12,12, black);
+		// clear_screen(current_buffer, black);
+		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
+		process_input(player);
+
+		// draw_rect(current_buffer, player->position.x,player->position.y,10,10, green);
+
+		vblank();
+
+		current_buffer = swap_buffer(current_buffer);
+	}
 
 }
