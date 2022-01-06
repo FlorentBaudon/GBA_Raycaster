@@ -1,6 +1,5 @@
 #include "MathTools.h"
 #include "sinlut.h"
-
 #include <math.h>
 #include <stdio.h>
 

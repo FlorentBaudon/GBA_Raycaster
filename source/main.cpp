@@ -7,7 +7,9 @@
 
 using namespace gba;
 
-extern "C" void asm_clear_screen(unsigned short color) CODE_IN_IWRAM;
+extern "C" void asm_clear_screen_m4(volatile unsigned short* buffer, unsigned char color) CODE_IN_IWRAM;
+extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
+
 
 vec2 world_forward = vec2(1,0);
 vec2 world_right = vec2(0, 1);
@@ -82,19 +84,19 @@ void process_input (Player* p)
 
 int main()
 {
-	DISPLAYCONTROL = MODE3 | BG2;
+	DISPLAYCONTROL = MODE4 | BG2;
 
 	raycaster = new Raycaster(mapS, map, mapX, mapY, fov, WIDTH, HEIGHT);
 
 	int next_palette_index = 0;
 
-	int black = add_color(0,0,0, next_palette_index);
-	int white = add_color(31,31,31, next_palette_index);
-	int dark_white = add_color(26,26,26, next_palette_index);
-	int green = add_color(0,31,0, next_palette_index);
-	int dark_green = add_color(0,20,0, next_palette_index);
-	int red = add_color(31,0,0, next_palette_index);
-	int dark_red = add_color(20,0,0, next_palette_index);
+	int black = M4_add_color(0,0,0, next_palette_index);
+	int white = M4_add_color(31,31,31, next_palette_index);
+	int dark_white = M4_add_color(26,26,26, next_palette_index);
+	int green = M4_add_color(0,31,0, next_palette_index);
+	int dark_green = M4_add_color(0,20,0, next_palette_index);
+	int red = M4_add_color(31,0,0, next_palette_index);
+	int dark_red = M4_add_color(20,0,0, next_palette_index);
 
 	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
@@ -103,23 +105,52 @@ int main()
 
 	int pX = 20, pY = 10;
 
-	asm_clear_screen(0xFF);
+
+	bool asm_clear = false;
+
+	asm_draw_line_m4(current_buffer, green, 0, 0, 130);
+
+	while(1){}
 
 	// while(1)
 	// {
-	// 	// clear_screen(current_buffer, dark_red);
-
-	// 	asm_clear_screen(0xFF);
-
+	// 	asm_draw_line_m4(current_buffer, green, 121, 51, 130);
+	
 	// 	vblank();
 
-	// 	// current_buffer = swap_buffer(current_buffer);
+	// 	current_buffer = swap_buffer(current_buffer);
 	// }
+
+
+	// while(1)
+	// {
+	// 	if(asm_clear)
+	// 	{
+
+	// 		asm_clear = false;
+	// 		//blue
+	// 		asm_clear_screen_m4(current_buffer, green);
+	// 	}else 
+	// 	{
+	// 		asm_clear = true;
+	// 		//Yellow
+	// 		M4_clear_screen(current_buffer, red);
+	// 	}
+
+	// 	for(int i=0; i< 1; i++){
+
+	// 		vblank();
+	// 	}
+
+	// 	current_buffer = swap_buffer(current_buffer);
+
+	// }
+
 
 	while(1)
 	{
 		// draw_rect(current_buffer, player->position.x-1,player->position.y-1,12,12, black);
-		// clear_screen(current_buffer, black);
+		asm_clear_screen_m4(current_buffer, black);
 		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 		process_input(player);
 
