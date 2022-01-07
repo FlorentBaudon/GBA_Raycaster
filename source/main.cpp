@@ -107,45 +107,18 @@ int main()
 
 
 	bool asm_clear = false;
-
-	asm_draw_line_m4(current_buffer, green, 0, 0, 130);
-
-	while(1){}
+	
 
 	// while(1)
 	// {
-	// 	asm_draw_line_m4(current_buffer, green, 121, 51, 130);
-	
+	// 	for(int i=0; i<240; i++)
+	// 	{
+	// 		asm_draw_line_m4(current_buffer, green, i, 0, 160);
+	// 	}
 	// 	vblank();
 
 	// 	current_buffer = swap_buffer(current_buffer);
 	// }
-
-
-	// while(1)
-	// {
-	// 	if(asm_clear)
-	// 	{
-
-	// 		asm_clear = false;
-	// 		//blue
-	// 		asm_clear_screen_m4(current_buffer, green);
-	// 	}else 
-	// 	{
-	// 		asm_clear = true;
-	// 		//Yellow
-	// 		M4_clear_screen(current_buffer, red);
-	// 	}
-
-	// 	for(int i=0; i< 1; i++){
-
-	// 		vblank();
-	// 	}
-
-	// 	current_buffer = swap_buffer(current_buffer);
-
-	// }
-
 
 	while(1)
 	{
