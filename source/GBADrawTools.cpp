@@ -2,8 +2,6 @@
 
 #include "GBADrawTools.h"
 
-extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
-
 /******** M3 Mode ************/
 
 // M3 mode use 16 bits color, but color only encore in 15 bits, 5 bit for each component (r, g, b)
@@ -74,10 +72,8 @@ void draw_rect(volatile unsigned short* buffer, int posX, int posY, int width, i
 void draw_vert_line(volatile unsigned short* buffer, int start_x, int start_y, int en_x, int end_y, unsigned char color)
 {
 
-	// for(int y=0; y< (end_y-start_y); y++)
-	// {
-	// 	M4_put_pixel(buffer, start_x, start_y+y, color);
-	// }
-
-    asm_draw_line_m4(buffer, color, start_x, start_y, end_y);
+	for(int y=0; y< (end_y-start_y); y++)
+	{
+		M4_put_pixel(buffer, start_x, start_y+y, color);
+	}
 }
