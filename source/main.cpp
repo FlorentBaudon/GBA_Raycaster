@@ -7,6 +7,10 @@
 
 using namespace gba;
 
+extern "C" void asm_clear_screen_m4(volatile unsigned short* buffer, unsigned char color) CODE_IN_IWRAM;
+extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
+
+
 vec2 world_forward = vec2(1,0);
 vec2 world_right = vec2(0, 1);
 float fov = DEG2RAD(60.f);
@@ -86,29 +90,26 @@ int main()
 
 	int next_palette_index = 0;
 
-	int black = add_color(0,0,0, next_palette_index);
-	int white = add_color(31,31,31, next_palette_index);
-	int dark_white = add_color(26,26,26, next_palette_index);
-	int green = add_color(0,31,0, next_palette_index);
-	int dark_green = add_color(0,20,0, next_palette_index);
-	int red = add_color(31,0,0, next_palette_index);
-	int dark_red = add_color(20,0,0, next_palette_index);
+	int black = M4_add_color(0,0,0, next_palette_index);
+	int white = M4_add_color(31,31,31, next_palette_index);
+	int dark_white = M4_add_color(26,26,26, next_palette_index);
+	int green = M4_add_color(0,31,0, next_palette_index);
+	int dark_green = M4_add_color(0,20,0, next_palette_index);
+	int red = M4_add_color(31,0,0, next_palette_index);
+	int dark_red = M4_add_color(20,0,0, next_palette_index);
 
 	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
-	clear_screen(FRONT_BUFFER, black);
-	clear_screen(BACK_BUFFER, black);
+	asm_clear_screen_m4(FRONT_BUFFER, black);
+	asm_clear_screen_m4(BACK_BUFFER, black);
 
 	int pX = 20, pY = 10;
 
 	while(1)
 	{
-		// draw_rect(current_buffer, player->position.x-1,player->position.y-1,12,12, black);
-
+		asm_clear_screen_m4(current_buffer, black);
 		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 		process_input(player);
-
-		// draw_rect(current_buffer, player->position.x,player->position.y,10,10, green);
 
 		vblank();
 

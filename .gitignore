@@ -1,4 +1,6 @@
 /bin
 /build
-VisualBoyAdvance.exe
 vba.ini
+*.elf
+*.gba
+*.sav

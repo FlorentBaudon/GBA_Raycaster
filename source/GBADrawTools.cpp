@@ -2,16 +2,36 @@
 
 #include "GBADrawTools.h"
 
-unsigned short make_color(unsigned char r, unsigned char g, unsigned char b)
+/******** M3 Mode ************/
+
+// M3 mode use 16 bits color, but color only encore in 15 bits, 5 bit for each component (r, g, b)
+unsigned short M3_make_color(unsigned char r, unsigned char g, unsigned char b)
 {
 	return ( (r & 0x1f) | (g & 0x1f) << 5 | (b & 0x1f) << 10);
 }
 
-void M3_put_pixel(volatile unsigned char* buffer, int x, int y, unsigned short color)
+// Draw a pixel in M3 mode, no double buffer (front buffer point to the begin of VRAM)
+void M3_put_pixel(int x, int y, unsigned short color)
 {
-	buffer[y*WIDTH+x] = color;
+	FRONT_BUFFER[y*WIDTH+x] = color;
 }
 
+/******** M4 Mode ************/
+
+// M4 mode use 16 bit colors, but the color is stored in 8bit value named palette. We need to add color to the palette before use them, VRAM use the 8bit value to retrieved the color. We are limited to 256 colors
+unsigned char M4_add_color(unsigned char r, unsigned char g, unsigned char b, int &index)
+{
+	unsigned short c = (r & 0x1f) | (g & 0x1f) << 5 | (b &0x1f) << 10;
+
+	PALETTE[index] = c;
+
+	index++;
+
+	return index-1;
+
+}
+
+// M4 mode have double buffering, we give the current buffer, the position, and the index of the color in the palette. we store two color in 16 bits, if coloumn is odd we store the colore index in the end of the 16 bit word
 void M4_put_pixel(volatile unsigned short* buffer, int x, int y, unsigned char color) 
 {
     /* find the offset which is the regular offset divided by two */
@@ -30,24 +50,12 @@ void M4_put_pixel(volatile unsigned short* buffer, int x, int y, unsigned char c
     }
 }
 
-void clear_screen(volatile unsigned short* buffer, unsigned char color) {
+void M4_clear_screen(volatile unsigned short* buffer, unsigned char color) {
     for (unsigned short y = 0; y < HEIGHT; y++) {
         for (unsigned short x = 0; x < WIDTH; x++) {
             M4_put_pixel(buffer, x, y, color);
         }
     }
-}
-
-unsigned char add_color(unsigned char r, unsigned char g, unsigned char b, int &index)
-{
-	unsigned short c = (r & 0x1f) | (g & 0x1f) << 5 | (b &0x1f) << 10;
-
-	PALETTE[index] = c;
-
-	index++;
-
-	return index-1;
-
 }
 
 void draw_rect(volatile unsigned short* buffer, int posX, int posY, int width, int height, unsigned char color)

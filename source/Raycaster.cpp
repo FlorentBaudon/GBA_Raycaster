@@ -1,6 +1,9 @@
 #include "MathTools.h"
 #include "Raycaster.h"
 #include "GBADrawTools.h"
+#include "GBA_VAR.h"
+
+extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
 
 Raycaster::Raycaster(int cellSize, int* map, int mapSizeX, int mapSizeY, float fov, int xResolution, int yResolution) 
 {
@@ -193,7 +196,11 @@ void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, co
 				color += 1;
 			}
 
-			draw_vert_line(buffer, start.x, start.y, end.x, end.y, color);
+			if(start.y != 0 && end.y != 0)
+			{
+				// draw_vert_line(buffer, start.x, start.y, end.x, end.y, color);
+				asm_draw_line_m4(buffer, color, start.x, start.y, end.y);
+			}
 		}
 
 

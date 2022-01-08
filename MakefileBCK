@@ -1,0 +1,60 @@
+ifeq ($(strip $(DEVKITARM)),)
+$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM")
+endif
+
+DEVKITPRO=$(DEVKITARM)/bin/
+GBATOOLS=$(GbaTools)
+
+include $(DEVKITARM)/gba_rules
+
+CC=$(DEVKITPRO)arm-none-eabi-g++
+CFLAG=-O3 -mthumb -mthumb-interwork -specs=gba.specs
+INCL = -Isource/
+
+TARGET=TestGBA
+
+SRCDIR=source/
+BINDIR=bin/
+OUTDIR=build/
+
+#List all .cpp files and remove SRC path to keep only the name of the files with extension
+SRC_CPP_LIST=$(subst $(SRCDIR), ,$(wildcard $(SRCDIR)*.cpp)) 
+SRC_ASM_LIST=$(subst $(SRCDIR), ,$(wildcard $(SRCDIR)*.s)) 
+
+#OBJ=$(SRC:.cpp=.o)
+OBJ=$(patsubst %.cpp, %.o, $(SRC_CPP_LIST) )
+OBJ := $(OBJ) $(patsubst %.s, %.o, $(SRC_ASM_LIST) )
+
+#$(info " List : [${SRC_ASM_LIST}]")
+
+all : directories $(TARGET)
+
+start : all
+	./VisualBoyAdvance.exe $(OUTDIR)$(TARGET).gba
+
+$(TARGET) : $(TARGET).elf
+	$(DEVKITPRO)arm-none-eabi-objcopy -O binary $(BINDIR)$< $(OUTDIR)$@.gba
+#$(GBATOOLS)gbafix $(OUTDIR)$@.gba
+	./VisualBoyAdvance.exe $(OUTDIR)$(TARGET).gba
+
+$(TARGET).elf : $(OBJ)
+	$(CC) -specs=gba.specs $(foreach o,$^,$(BINDIR)$(o)) -o $(BINDIR)$@
+
+%.o : $(SRCDIR)%.cpp
+	$(CC) $(CFLAG) $(INCL) -o $(BINDIR)$@ -c $<
+
+%.o : $(SRCDIR)%.s 
+	arm-none-eabi-as -mthumb-interwork $< -o $(BINDIR)$@
+
+.PHONY : clean wipe directories
+
+clean :
+	rm -f $(BINDIR)*.o
+	rm -f $(BINDIR)*.elf 
+	rm -f $(OUTDIR)*.gba
+wipe :
+	rm -rf $(BINDIR)
+	rm -rf $(OUTDIR)
+directories :
+	mkdir -p $(BINDIR)
+	mkdir -p $(OUTDIR)

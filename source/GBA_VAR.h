@@ -49,3 +49,14 @@ typedef unsigned long      uint32;
 #define KEY_DOWN    128
 #define KEY_R       256
 #define KEY_L       512
+
+#define DATA_IN_EWRAM __attribute__((section(".ewram")))
+#define DATA_IN_IWRAM __attribute__((section(".iwram")))
+#define BSS_IN_EWRAM __attribute__((section(".sbss")))
+#define CODE_IN_EWRAM __attribute__((section(".ewram"), long_call))
+#define CODE_IN_IWRAM __attribute__((section(".iwram"), long_call))
+
+// #define CODE_IN_IWRAM __attribute__ ((section (".iwram"), long_call))
+// #define CODE_IN_ROM __attribute__ ((section (".text"), long_call))
+// #define IN_IWRAM __attribute__ ((section (".iwram")))
+// #define IN_EWRAM __attribute__ ((section (".ewram")))

@@ -1,49 +1,140 @@
-ifeq ($(strip $(DevKitGBA)),)
-$(error "Please set DEVKITARM in your environment. export DevKitGBA=<path to>devkitARM")
+#---------------------------------------------------------------------------------
+# Clear the implicit built in rules
+#---------------------------------------------------------------------------------
+.SUFFIXES:
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(DEVKITARM)),)
+$(error "Please set DEVKITARM in your environment. export DEVKITARM=<path to>devkitARM)
 endif
 
-DEVKITPRO=$(DevKitGBA)
-GBATOOLS=$(GbaTools)
+include $(DEVKITARM)/gba_rules
 
-CC=$(DEVKITPRO)arm-none-eabi-g++
-CFLAG=-O3 -mthumb -mthumb-interwork
-INCL = -Isource/
+#---------------------------------------------------------------------------------
+# TARGET is the name of the output, if this ends with _mb a multiboot image is generated
+# BUILD is the directory where object files & intermediate files will be placed
+# SOURCES is a list of directories containing source code
+# DATA is a list of directories containing data files
+# INCLUDES is a list of directories containing header files
+#---------------------------------------------------------------------------------
+TARGET		:=	$(shell basename $(CURDIR))
+BUILD		:=	build
+SOURCES		:=	source
+DATA		:=	
+INCLUDES	:=
 
-TARGET=TestGBA
+#---------------------------------------------------------------------------------
+# options for code generation
+#---------------------------------------------------------------------------------
+ARCH	:=	-mthumb -mthumb-interwork
 
-SRCDIR=source/
-BINDIR=bin/
-OUTDIR=build/
+CFLAGS	:=	-g -Wall -O3\
+			-mcpu=arm7tdmi -mtune=arm7tdmi\
+ 			-fomit-frame-pointer\
+			-ffast-math \
+			$(ARCH)
 
-SRC=$(subst $(SRCDIR), ,$(wildcard $(SRCDIR)*.cpp))
+CFLAGS	+=	$(INCLUDE)
 
-OBJ=$(SRC:.cpp=.o)
+ASFLAGS	:=	$(ARCH)
+LDFLAGS	=	-g $(ARCH) -Wl,-Map,$(notdir $@).map
 
-all : directories $(TARGET)
+#---------------------------------------------------------------------------------
+# path to tools - this can be deleted if you set the path to the toolchain in windows
+#---------------------------------------------------------------------------------
+export PATH		:=	$(DEVKITARM)/bin:$(PATH)
 
-start : all
-	./VisualBoyAdvance.exe $(OUTDIR)$(TARGET).gba
+#---------------------------------------------------------------------------------
+# any extra libraries we wish to link with the project
+#---------------------------------------------------------------------------------
+LIBS	:=	-lgba
 
-$(TARGET) : $(TARGET).elf
-	$(DEVKITPRO)arm-none-eabi-objcopy -O binary $(BINDIR)$< $(OUTDIR)$@.gba
-	#$(GBATOOLS)gbafix $(OUTDIR)$@.gba
-	./VisualBoyAdvance.exe $(OUTDIR)$(TARGET).gba
+#---------------------------------------------------------------------------------
+# list of directories containing libraries, this must be the top level containing
+# include and lib
+#---------------------------------------------------------------------------------
+LIBDIRS	:=	$(LIBGBA)
 
-$(TARGET).elf : $(OBJ)
-	$(CC) -specs=gba.specs $(foreach o,$^,$(BINDIR)$(o)) -o $(BINDIR)$@
+#---------------------------------------------------------------------------------
+# no real need to edit anything past this point unless you need to add additional
+# rules for different file extensions
+#---------------------------------------------------------------------------------
+ifneq ($(BUILD),$(notdir $(CURDIR)))
+#---------------------------------------------------------------------------------
 
-%.o : $(SRCDIR)%.cpp
-	$(CC) $(CFLAG) $(INCL) -o $(BINDIR)$@ -c $<
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
+					$(foreach dir,$(DATA),$(CURDIR)/$(dir))
 
-.PHONY : clean wipe directories
+export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
-clean :
-	rm -f $(BINDIR)*.o
-	rm -f $(BINDIR)*.elf
-	rm -f $(OUTDIR)*.gba
-wipe :
-	rm -rf $(BINDIR)
-	rm -rf $(OUTDIR)
-directories :
-	mkdir -p $(BINDIR)
-	mkdir -p $(OUTDIR)
+#---------------------------------------------------------------------------------
+# automatically build a list of object files for our project
+#---------------------------------------------------------------------------------
+CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
+CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
+SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
+BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+
+#---------------------------------------------------------------------------------
+# use CXX for linking C++ projects, CC for standard C
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(CPPFILES)),)
+#---------------------------------------------------------------------------------
+	export LD	:=	$(CC)
+#---------------------------------------------------------------------------------
+else
+#---------------------------------------------------------------------------------
+	export LD	:=	$(CXX)
+#---------------------------------------------------------------------------------
+endif
+#---------------------------------------------------------------------------------
+
+export OFILES	:= $(addsuffix .o,$(BINFILES)) $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+
+#---------------------------------------------------------------------------------
+# build a list of include paths
+#---------------------------------------------------------------------------------
+export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
+					$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+					-I$(CURDIR)/$(BUILD)
+
+#---------------------------------------------------------------------------------
+# build a list of library paths
+#---------------------------------------------------------------------------------
+export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+
+.PHONY: $(BUILD) clean
+
+#---------------------------------------------------------------------------------
+$(BUILD):
+	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	./VisualBoyAdvance.exe $(TARGET).gba
+
+all	: $(BUILD)
+#---------------------------------------------------------------------------------
+clean:
+	@echo clean ...
+	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).gba
+
+#---------------------------------------------------------------------------------
+else
+
+DEPENDS	:=	$(OFILES:.o=.d)
+
+#---------------------------------------------------------------------------------
+# main targets
+#---------------------------------------------------------------------------------
+$(OUTPUT).gba	:	$(OUTPUT).elf
+
+$(OUTPUT).elf	:	$(OFILES)
+
+%.o	:	%.pcx
+	@echo $(notdir $<)
+	@$(bin2o)
+
+-include $(DEPENDS)
+
+#---------------------------------------------------------------------------------
+endif
+#---------------------------------------------------------------------------------

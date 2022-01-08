@@ -9,14 +9,14 @@ namespace gba
 {
     struct vec2 
     {
-        int x;
-        int y;
+        float x;
+        float y;
         vec2()
         {
             x = 0;
             y = 0;
         }
-        vec2(int _x, int _y) 
+        vec2(float _x, float _y) 
         {
             x = _x;
             y = _y;
@@ -29,12 +29,6 @@ namespace gba
         {
             return vec2(x-a.x, y-a.y);
         }
-    };
-
-    struct vec2f
-    {
-        float x;
-        float y;
     };
 
     //convert functions
