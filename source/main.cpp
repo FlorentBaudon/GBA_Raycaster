@@ -100,34 +100,16 @@ int main()
 
 	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
-	// clear_screen(FRONT_BUFFER, black);
-	// clear_screen(BACK_BUFFER, black);
+	asm_clear_screen_m4(FRONT_BUFFER, black);
+	asm_clear_screen_m4(BACK_BUFFER, black);
 
 	int pX = 20, pY = 10;
 
-
-	bool asm_clear = false;
-	
-
-	// while(1)
-	// {
-	// 	for(int i=0; i<240; i++)
-	// 	{
-	// 		asm_draw_line_m4(current_buffer, green, i, 0, 160);
-	// 	}
-	// 	vblank();
-
-	// 	current_buffer = swap_buffer(current_buffer);
-	// }
-
 	while(1)
 	{
-		// draw_rect(current_buffer, player->position.x-1,player->position.y-1,12,12, black);
 		asm_clear_screen_m4(current_buffer, black);
 		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 		process_input(player);
-
-		// draw_rect(current_buffer, player->position.x,player->position.y,10,10, green);
 
 		vblank();
 
