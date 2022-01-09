@@ -1,7 +1,8 @@
+#include "GBA_VAR.h"
 #include "MathTools.h"
 #include "sinlut.h"
-#include <math.h>
-#include <stdio.h>
+
+extern "C" int asm_sqrt(int x) CODE_IN_IWRAM;
 
 int gba::floor(float n) 
 {
@@ -20,25 +21,18 @@ float gba::sin(float a) //angle in radian
 
 float gba::tan(float a)
 {
-    return sin(a)/cos(a);
+    return gba::sin(a)/gba::cos(a);
 }
 
-// float sqrt(float a) 
-// {
-//     float x,
-//         x1 = a / 2;
-        
-//     do {
-//         x = x1;
-//         x1 = (x + (a / x)) / 2;
-//     } while (x != x1);
-//     return x;
-// }
+float gba::sqrt(float x) 
+{
+    return asm_sqrt(x);
+}
 
 float gba::length(vec2 v) 
 {
     float o = (v.x*v.x) + (v.y*v.y);
-    return sqrt(o);
+    return gba::sqrt(o);
 }
 
 unsigned short gba::floatToFixed(float n)

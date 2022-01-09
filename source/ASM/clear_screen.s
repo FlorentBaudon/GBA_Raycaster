@@ -28,16 +28,16 @@ loop1:
 @  r1 : 8bits  Color index
 asm_clear_screen_m4:
 	@buffer size
-	mov r4, #0x4B00
+	mov r2, #0x4B00
 	@in m4 mode color are stored using 8 bit index, we store two color index in 16 bit slot
-	mov r5, r1
-	LSL r5, #8
-	ADD r5, r5,r1
+	mov r3, r1
+	LSL r3, #8
+	ADD r3, r3,r1
 
 loop2:
-	strh r5, [r0]
+	strh r3, [r0]
 	add r0,r0,#2
-	subs r4, r4, #1
+	subs r2, r2, #1
 	bne loop2
 
 	bx lr @return to previous function

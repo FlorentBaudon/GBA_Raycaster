@@ -1,3 +1,6 @@
 Square root en asm (bios)
 COS SIN ASM ? (bios)
 Stocker toutes les lignes dans un tableau et les écrire d'un coup en ASM
+thumb vs arm
+utiliser int plutot que float ?
+Raycaster full asm ?

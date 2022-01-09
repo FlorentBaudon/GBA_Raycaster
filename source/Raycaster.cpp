@@ -144,7 +144,7 @@ void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, co
 		float a = r_angle - angleStep * i;
 
 
-		/****** Launch raycast, je n'appelle pas la fonction car j'ai besoin des infos de disgba::tance pour le shading (savoir si c'est un intersect horizontale ou verticale ****/
+		/****** Launch raycast, je n'appelle pas la fonction car j'ai besoin des infos de distance pour le shading (savoir si c'est un intersect horizontale ou verticale ****/
 		gba::vec2 pH = this->findHorizontalIntersect(pos, a);
 		gba::vec2 pV = this->findVerticalIntersect(pos, a);
 

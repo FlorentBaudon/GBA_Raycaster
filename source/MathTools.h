@@ -42,5 +42,5 @@ namespace gba
     int floor(float n);
     float length(vec2 v);
     vec2 rotateVectorRad(vec2 v, float a);
-    // float sqrt(float a);
+    float sqrt(float x);
 }

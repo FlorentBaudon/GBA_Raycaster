@@ -1,9 +1,13 @@
-#include "MathTools.h"
 
+#include "MathTools.h"
 #include "GBA_VAR.h"
 #include "GBADrawTools.h"
 #include "Player.h"
 #include "Raycaster.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 using namespace gba;
 
@@ -107,6 +111,7 @@ int main()
 
 	while(1)
 	{
+
 		asm_clear_screen_m4(current_buffer, black);
 		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 		process_input(player);
