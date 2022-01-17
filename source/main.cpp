@@ -1,4 +1,3 @@
-
 #include "MathTools.h"
 #include "GBA_VAR.h"
 #include "GBADrawTools.h"
@@ -20,7 +19,8 @@ vec2 world_right = vec2(0, 1);
 float fov = DEG2RAD(60.f);
 
 /********* Player **********/
-Player* player = new Player(vec2(288, 70), world_forward, world_right, DEG2RAD(-90.f));
+Player* player = new Player(vec2(288, 150), world_forward, world_right, DEG2RAD(-90.f));
+// Player* player = new Player(vec2(250, 250), world_forward, world_right, DEG2RAD(0));
 
 //Map
 int mapX = 8, mapY = 8, mapS = 64, gridS = 1;
@@ -35,6 +35,18 @@ int map[] =
 1,0,0,0,0,0,0,1,
 1,1,1,1,1,1,1,1
 };
+
+// int map[] =
+// {
+// 1,1,1,1,1,1,1,1,
+// 1,0,0,1,1,0,0,1,
+// 1,0,0,0,0,0,0,1,
+// 1,3,0,0,0,0,2,1,
+// 1,3,0,0,0,0,2,1,
+// 1,0,0,0,0,0,0,1,
+// 1,0,0,1,1,0,0,1,
+// 1,1,1,1,1,1,1,1
+// };
 
 /********* Raycaster **********/
 Raycaster* raycaster;
@@ -59,31 +71,38 @@ void vblank()
 	while(VCOUNT<160) {};
 }
 
-void process_input (Player* p) 
+bool process_input (Player* p) 
 {
 		float s = 5.0f;
 		vec2 d = vec2(0, 0);
+		bool bMoved = false;
 
 		if ((KEYSTATE & KEY_UP) == 0)
 		{
-			d.y-=s;
+			d.x+=s;
+			bMoved = true;
 		}
 		if ((KEYSTATE & KEY_DOWN) == 0)
 		{
-			d.y+=s;
+			d.x-=s;
+			bMoved = true;
 		}
 		if ((KEYSTATE & KEY_LEFT) == 0)
 		{
 			//d.x-=s;
 			player->turn(  DEG2RAD(10.0f) );
+			bMoved = true;
 		}
 		if ((KEYSTATE & KEY_RIGHT) == 0)
 		{
 			//d.x+=s;
 			player->turn( -DEG2RAD(10.0f) );
+			bMoved = true;
 		}
 
 		player->move(d);
+
+		return bMoved;
 }
 
 int main()
@@ -101,6 +120,8 @@ int main()
 	int dark_green = M4_add_color(0,20,0, next_palette_index);
 	int red = M4_add_color(31,0,0, next_palette_index);
 	int dark_red = M4_add_color(20,0,0, next_palette_index);
+	int blue = M4_add_color(0,0,31, next_palette_index);
+	int dark_blue = M4_add_color(0,0,20, next_palette_index);
 
 	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
@@ -111,10 +132,10 @@ int main()
 
 	while(1)
 	{
-
-		asm_clear_screen_m4(current_buffer, black);
-		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 		process_input(player);
+
+		asm_clear_screen_m4(current_buffer, dark_blue);
+		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 
 		vblank();
 

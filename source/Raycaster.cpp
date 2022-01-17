@@ -3,6 +3,10 @@
 #include "GBADrawTools.h"
 #include "GBA_VAR.h"
 
+
+#include <string>
+extern "C" void vbaprint(const char *message);
+
 extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
 
 Raycaster::Raycaster(int cellSize, int* map, int mapSizeX, int mapSizeY, float fov, int xResolution, int yResolution) 
@@ -77,7 +81,6 @@ gba::vec2 Raycaster::findHorizontalIntersect(gba::vec2 pos, float angle)
 
 gba::vec2 Raycaster::findVerticalIntersect(gba::vec2 pos, float angle)
 {
-
 	gba::vec2 p = gba::vec2(0, 0);
 	gba::vec2 d = gba::vec2(0, 0);
 
@@ -118,26 +121,17 @@ gba::vec2 Raycaster::findVerticalIntersect(gba::vec2 pos, float angle)
 	return p;
 }
 
-
-gba::vec2 Raycaster::drawRaycast(gba::vec2 pos, float angle, bool bDebug)
-{
-	gba::vec2 pH = this->findHorizontalIntersect(pos, angle);
-	gba::vec2 pV = this->findVerticalIntersect(pos, angle);
-
-	float dH = gba::length(pH - pos);
-	float dV = gba::length(pV - pos);
-
-	return (dH < dV) ? pH : pV;
-}
-
 void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, const float angle, const float fov)
 {
 	const float r_angle = angle + fov / 2;
 
-	int resX = this->xResolution, resY = this->yResolution;
+	const int resX = this->xResolution, resY = this->yResolution;
 	const float dScreen = (resX / 2) / gba::tan(fov / 2);
-	int hMur = 64;
-	float angleStep = fov / resX;
+	const int hMur = 64;
+	const float angleStep = fov / resX;
+
+		std::string msg = "resX : " + std::to_string(resX) + "- resY : " + std::to_string(resY) + " - r_angle : " + std::to_string(r_angle) + " - fov : " + std::to_string(fov) + "\n";
+	vbaprint(msg.c_str());
 
 	for (int i = 0; i < resX; i++)
 	{
@@ -156,18 +150,16 @@ void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, co
 		/********************************************************************************************************/
 
 		float d = length(p - pos);
-		d *= gba::cos(a - angle);// * gba::cos (player_angle - a) to correct disgba::tance to avoid fishey effect
+		d *= gba::cos(a - angle);// * gba::cos (player_angle - a) to correct distance to avoid fishey effect
 		int r = this->checkCellValue(p);
 
 
-		if (true)
-		{
 			float hp = dScreen * (hMur / d);
 
-			gba::vec2 start(i, resY / 2 - (hp / 2));
-			gba::vec2 end(i, resY / 2 + (hp / 2));
+		gba::vec2 start(i, (resY / 2) - (hp / 2));
+		gba::vec2 end(i, (resY / 2) + (hp / 2));
 
-			int color =0;
+		int color = 0;
 
 			switch (r)
 			{
@@ -198,11 +190,9 @@ void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, co
 
 			if(start.y != 0 && end.y != 0)
 			{
-				// draw_vert_line(buffer, start.x, start.y, end.x, end.y, color);
+			//  draw_vert_line(buffer, start.x, start.y, end.x, end.y, color);
 				asm_draw_line_m4(buffer, color, start.x, start.y, end.y);
-			}
 		}
-
 
 	}
 }

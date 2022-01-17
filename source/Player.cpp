@@ -16,9 +16,18 @@ Player::Player(vec2 position, vec2 worldForward, vec2 worldRight, float angle)
 	this->refreshPlayerDatas();
 }
 
-void Player::turn(float angle) 
+void Player::turn(float a) 
 {
-	this->angle += angle;
+	this->angle += a;
+	if( this->angle > (2 * PI) )
+	{
+		this->angle -= (2*PI);
+	}
+	else if( this->angle < -(2 * PI) )
+	{
+		this->angle += (2 * PI);
+	}
+
 	this->refreshPlayerDatas();
 	
 }
