@@ -5,3 +5,11 @@ thumb vs arm
 utiliser int plutot que float ?
 Raycaster full asm ?
 utiliser la bank asm pour gerer le double buffering
+Division en ARM (bios syscall)
+ecriture de ligne avec offset (stmia ? + condition ?)
+
+
+
+ARM leanr
+        - using float
+        - manage array
