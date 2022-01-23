@@ -6,13 +6,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 using namespace gba;
 
 extern "C" void asm_clear_screen_m4(volatile unsigned short* buffer, unsigned char color) CODE_IN_IWRAM;
 extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
-
 
 vec2 world_forward = vec2(1,0);
 vec2 world_right = vec2(0, 1);

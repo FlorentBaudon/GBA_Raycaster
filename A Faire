@@ -2,7 +2,7 @@ V - Square root en asm (bios)
 COS SIN ASM ? (bios)
 X - Stocker toutes les lignes dans un tableau et les écrire d'un coup en ASM
 thumb vs arm
-utiliser int plutot que float ?
+utiliser int  (fixed point) plutot que float ? Oui, impératif car pas de FPU dans la GBA
 Raycaster full asm ?
 utiliser la bank asm pour gerer le double buffering
 Division en ARM (bios syscall)
@@ -11,5 +11,5 @@ ecriture de ligne avec offset (stmia ? + condition ?)
 
 
 ARM leanr
-        - using float
+        - using float -> utiliser fixed point unit 
         - manage array

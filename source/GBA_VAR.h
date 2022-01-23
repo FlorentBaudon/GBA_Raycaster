@@ -4,6 +4,10 @@ typedef unsigned char      uint8;
 typedef unsigned short     uint16;
 typedef unsigned long      uint32;
 
+typedef char                int8;
+typedef short               int16;
+typedef long                int32;
+
 // Registers
 #define DISPLAYCONTROL	*((volatile unsigned long*) 	 0x04000000)
 #define KEYSTATE		*((volatile unsigned long*) 	 0x04000130)
@@ -55,8 +59,3 @@ typedef unsigned long      uint32;
 #define BSS_IN_EWRAM __attribute__((section(".sbss")))
 #define CODE_IN_EWRAM __attribute__((section(".ewram"), long_call))
 #define CODE_IN_IWRAM __attribute__((section(".iwram"), long_call))
-
-// #define CODE_IN_IWRAM __attribute__ ((section (".iwram"), long_call))
-// #define CODE_IN_ROM __attribute__ ((section (".text"), long_call))
-// #define IN_IWRAM __attribute__ ((section (".iwram")))
-// #define IN_EWRAM __attribute__ ((section (".ewram")))
