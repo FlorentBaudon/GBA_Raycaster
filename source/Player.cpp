@@ -1,5 +1,6 @@
-#include "MathTools.h"
+#include "GBA_VAR.h"
 
+#include "MathTools.h"
 #include "Player.h"
 
 using namespace gba;

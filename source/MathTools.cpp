@@ -1,12 +1,13 @@
 #include "GBA_VAR.h"
+
 #include "MathTools.h"
 #include "sinlut.h"
 
 extern "C" int asm_sqrt(int x) CODE_IN_IWRAM;
 
-int gba::floor(float n) 
+int16 gba::floor(float n) 
 {
-    return (int)n;
+    return (int16)n;
 }
 
 float gba::cos(float a) 

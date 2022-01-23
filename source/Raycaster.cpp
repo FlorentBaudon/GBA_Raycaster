@@ -1,7 +1,8 @@
+#include "GBA_VAR.h"
+
 #include "MathTools.h"
 #include "Raycaster.h"
 #include "GBADrawTools.h"
-#include "GBA_VAR.h"
 
 
 #include <string>
@@ -9,7 +10,7 @@ extern "C" void vbaprint(const char *message);
 
 extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
 
-Raycaster::Raycaster(int cellSize, int* map, int mapSizeX, int mapSizeY, float fov, int xResolution, int yResolution) 
+Raycaster::Raycaster(uint8 cellSize, int* map, uint16 mapSizeX, uint16 mapSizeY, float fov, uint8 xResolution, uint8 yResolution)
 {
 	this->cellSize = cellSize; 
 	this->map = map; 
@@ -19,7 +20,7 @@ Raycaster::Raycaster(int cellSize, int* map, int mapSizeX, int mapSizeY, float f
 	this->yResolution = yResolution;
 }
 
-int Raycaster::checkCellValue(gba::vec2 p)
+int8 Raycaster::checkCellValue(gba::vec2 p)
 {
 	if (p.x > mapSizeX * cellSize || p.y > mapSizeY * cellSize || p.x < 0 || p.y < 0)
 	{
@@ -27,12 +28,12 @@ int Raycaster::checkCellValue(gba::vec2 p)
 	}
 
 	gba::vec2 t_p = gba::vec2(0, 0); //truncate position
-	t_p.x = int(p.x / cellSize);
-	t_p.y = int(p.y / cellSize);
+	t_p.x = gba::floor(p.x / cellSize);
+	t_p.y = gba::floor(p.y / cellSize);
 
-	int tabPos = t_p.x + (mapSizeX * t_p.y);
+	uint16 tabPos = t_p.x + (mapSizeX * t_p.y);
 
-	int cell = map[tabPos];
+	int8 cell = map[tabPos];
 
 	return cell;
 }
@@ -46,7 +47,7 @@ gba::vec2 Raycaster::findHorizontalIntersect(gba::vec2 pos, float angle)
 
 	if (gba::sin(angle) > 0.001f)
 	{
-		p.y = int(pos.y / cellSize) * cellSize - pos.y - 0.0001f;
+		p.y = gba::floor(pos.y / cellSize) * cellSize - pos.y - 0.0001f;
 		p.x = gba::tan(angle + PI / 2) * p.y;
 		p = pos + p;
 
@@ -55,7 +56,7 @@ gba::vec2 Raycaster::findHorizontalIntersect(gba::vec2 pos, float angle)
 	}
 	else if (gba::sin(angle) < -0.001f)
 	{
-		p.y = int(pos.y / cellSize) * cellSize - pos.y + cellSize;
+		p.y = gba::floor(pos.y / cellSize) * cellSize - pos.y + cellSize;
 		p.x = gba::tan(angle + PI / 2) * p.y;
 		p = pos + p;
 
@@ -88,7 +89,7 @@ gba::vec2 Raycaster::findVerticalIntersect(gba::vec2 pos, float angle)
 
 	if (gba::cos(angle) < -0.001f)
 	{
-		p.x = int(pos.x / cellSize) * cellSize - pos.x - 0.0001f;
+		p.x = gba::floor(pos.x / cellSize) * cellSize - pos.x - 0.0001f;
 		p.y = -gba::tan(angle) * p.x;
 		p = pos + p;
 
@@ -98,7 +99,7 @@ gba::vec2 Raycaster::findVerticalIntersect(gba::vec2 pos, float angle)
 	}
 	else if (gba::cos(angle) > 0.001f)
 	{
-		p.x = int(pos.x / cellSize) * 64 - pos.x + cellSize;
+		p.x = gba::floor(pos.x / cellSize) * 64 - pos.x + cellSize;
 		p.y = -gba::tan(angle) * p.x;
 		p = pos + p;
 
@@ -125,12 +126,12 @@ void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, co
 {
 	const float r_angle = angle + fov / 2;
 
-	const int resX = this->xResolution, resY = this->yResolution;
+	const uint8 resX = this->xResolution, resY = this->yResolution;
 	const float dScreen = (resX / 2) / gba::tan(fov / 2);
-	const int hMur = 64;
+	const uint8 hMur = 64;
 	const float angleStep = fov / resX;
 
-		std::string msg = "resX : " + std::to_string(resX) + "- resY : " + std::to_string(resY) + " - r_angle : " + std::to_string(r_angle) + " - fov : " + std::to_string(fov) + "\n";
+	std::string msg = "resX : " + std::to_string(resX) + "- resY : " + std::to_string(resY) + " - r_angle : " + std::to_string(r_angle) + " - fov : " + std::to_string(fov) + "\n";
 	vbaprint(msg.c_str());
 
 	for (int i = 0; i < resX; i++)
@@ -151,7 +152,7 @@ void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, co
 
 		float d = length(p - pos);
 		d *= gba::cos(a - angle);// * gba::cos (player_angle - a) to correct distance to avoid fishey effect
-		int r = this->checkCellValue(p);
+		int8 r = this->checkCellValue(p);
 
 
 			float hp = dScreen * (hMur / d);
@@ -159,13 +160,10 @@ void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, co
 		gba::vec2 start(i, (resY / 2) - (hp / 2));
 		gba::vec2 end(i, (resY / 2) + (hp / 2));
 
-		int color = 0;
+		int8 color = 0;
 
 			switch (r)
 			{
-			case -1:
-				color = 1;
-				break;
 			case 0:
 				color = 0;
 				break;
@@ -179,6 +177,7 @@ void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, co
 				color = 5;
 				break;
 			default:
+				color = 0;
 				break;
 			}
 
