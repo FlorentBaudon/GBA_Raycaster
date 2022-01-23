@@ -19,7 +19,7 @@ void M3_put_pixel(int x, int y, unsigned short color)
 /******** M4 Mode ************/
 
 // M4 mode use 16 bit colors, but the color is stored in 8bit value named palette. We need to add color to the palette before use them, VRAM use the 8bit value to retrieved the color. We are limited to 256 colors
-unsigned char M4_add_color(unsigned char r, unsigned char g, unsigned char b, int &index)
+unsigned char M4_add_color(unsigned char r, unsigned char g, unsigned char b, uint8 &index)
 {
 	unsigned short c = (r & 0x1f) | (g & 0x1f) << 5 | (b &0x1f) << 10;
 

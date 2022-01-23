@@ -22,8 +22,8 @@ Player* player = new Player(vec2(288, 150), world_forward, world_right, DEG2RAD(
 // Player* player = new Player(vec2(250, 250), world_forward, world_right, DEG2RAD(0));
 
 //Map
-int mapX = 8, mapY = 8, mapS = 64, gridS = 1;
-int map[] =
+uint8 mapX = 8, mapY = 8, mapS = 64, gridS = 1;
+uint8 map[] =
 {
 1,1,1,1,2,1,1,1,
 1,0,0,0,0,0,0,1,
@@ -72,29 +72,28 @@ void vblank()
 
 bool process_input (Player* p) 
 {
-		float s = 5.0f;
+		float speed = 5.0f;
 		vec2 d = vec2(0, 0);
 		bool bMoved = false;
 
 		if ((KEYSTATE & KEY_UP) == 0)
 		{
-			d.x+=s;
+			d.x+=speed;
 			bMoved = true;
 		}
 		if ((KEYSTATE & KEY_DOWN) == 0)
 		{
-			d.x-=s;
+			d.x-=speed;
 			bMoved = true;
 		}
 		if ((KEYSTATE & KEY_LEFT) == 0)
 		{
-			//d.x-=s;
+
 			player->turn(  DEG2RAD(10.0f) );
 			bMoved = true;
 		}
 		if ((KEYSTATE & KEY_RIGHT) == 0)
 		{
-			//d.x+=s;
 			player->turn( -DEG2RAD(10.0f) );
 			bMoved = true;
 		}
@@ -110,31 +109,31 @@ int main()
 
 	raycaster = new Raycaster(mapS, map, mapX, mapY, fov, WIDTH, HEIGHT);
 
-	int next_palette_index = 0;
+	uint8 next_palette_index = 0;
 
-	int black = M4_add_color(0,0,0, next_palette_index);
-	int white = M4_add_color(31,31,31, next_palette_index);
-	int dark_white = M4_add_color(26,26,26, next_palette_index);
-	int green = M4_add_color(0,31,0, next_palette_index);
-	int dark_green = M4_add_color(0,20,0, next_palette_index);
-	int red = M4_add_color(31,0,0, next_palette_index);
-	int dark_red = M4_add_color(20,0,0, next_palette_index);
-	int blue = M4_add_color(0,0,31, next_palette_index);
-	int dark_blue = M4_add_color(0,0,20, next_palette_index);
+	uint8 black = M4_add_color(0,0,0, next_palette_index);
+	uint8 white = M4_add_color(31,31,31, next_palette_index);
+	uint8 dark_white = M4_add_color(26,26,26, next_palette_index);
+	uint8 green = M4_add_color(0,31,0, next_palette_index);
+	uint8 dark_green = M4_add_color(0,20,0, next_palette_index);
+	uint8 red = M4_add_color(31,0,0, next_palette_index);
+	uint8 dark_red = M4_add_color(20,0,0, next_palette_index);
+	uint8 blue = M4_add_color(0,0,31, next_palette_index);
+	uint8 dark_blue = M4_add_color(0,0,20, next_palette_index);
 
 	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
 	asm_clear_screen_m4(FRONT_BUFFER, black);
 	asm_clear_screen_m4(BACK_BUFFER, black);
 
-	int pX = 20, pY = 10;
+	uint16 pX = 20, pY = 10;
 
 	while(1)
 	{
 		process_input(player);
 
 		asm_clear_screen_m4(current_buffer, dark_blue);
-		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
+		raycaster->scanEnv(current_buffer, player->position, player->angle);
 
 		vblank();
 

@@ -10,7 +10,7 @@ extern "C" void vbaprint(const char *message);
 
 extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
 
-Raycaster::Raycaster(uint8 cellSize, int* map, uint16 mapSizeX, uint16 mapSizeY, float fov, uint8 xResolution, uint8 yResolution)
+Raycaster::Raycaster(uint8 cellSize, uint8* map, uint16 mapSizeX, uint16 mapSizeY, float fov, uint8 xResolution, uint8 yResolution)
 {
 	this->cellSize = cellSize; 
 	this->map = map; 
@@ -18,6 +18,7 @@ Raycaster::Raycaster(uint8 cellSize, int* map, uint16 mapSizeX, uint16 mapSizeY,
 	this->mapSizeY = mapSizeY; 
 	this->xResolution = xResolution;
 	this->yResolution = yResolution;
+	this->fov = fov;
 }
 
 int8 Raycaster::checkCellValue(gba::vec2 p)
@@ -122,14 +123,14 @@ gba::vec2 Raycaster::findVerticalIntersect(gba::vec2 pos, float angle)
 	return p;
 }
 
-void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, const float angle, const float fov)
+void Raycaster::scanEnv(unsigned volatile short* buffer, const gba::vec2 pos, const float angle)
 {
-	const float r_angle = angle + fov / 2;
+	const float r_angle = angle + this->fov / 2;
 
 	const uint8 resX = this->xResolution, resY = this->yResolution;
-	const float dScreen = (resX / 2) / gba::tan(fov / 2);
+	const float dScreen = (resX / 2) / gba::tan(this->fov / 2);
 	const uint8 hMur = 64;
-	const float angleStep = fov / resX;
+	const float angleStep = this->fov / resX;
 
 	std::string msg = "resX : " + std::to_string(resX) + "- resY : " + std::to_string(resY) + " - r_angle : " + std::to_string(r_angle) + " - fov : " + std::to_string(fov) + "\n";
 	vbaprint(msg.c_str());
