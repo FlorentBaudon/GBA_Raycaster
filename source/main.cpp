@@ -7,9 +7,6 @@
 
 using namespace m_gba;
 
-extern "C" void asm_clear_screen_m4(volatile uint16* buffer, uint16 color) CODE_IN_IWRAM;
-extern "C" void asm_draw_line_m4(volatile uint16* buffer, uint8 color, uint16 x, uint16 y, uint16 endy) CODE_IN_IWRAM;
-
 
 vec2 world_forward = vec2(1,0);
 vec2 world_right = vec2(0, 1);
@@ -100,14 +97,14 @@ int main()
 
 	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
-	asm_clear_screen_m4(FRONT_BUFFER, black);
-	asm_clear_screen_m4(BACK_BUFFER, black);
+	ASM_clear_screen(FRONT_BUFFER, black);
+	ASM_clear_screen(BACK_BUFFER, black);
 
 	int pX = 20, pY = 10;
 
 	while(1)
 	{
-		asm_clear_screen_m4(current_buffer, black);
+		ASM_clear_screen(current_buffer, black);
 		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 		process_input(player);
 

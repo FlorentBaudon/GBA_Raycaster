@@ -2,6 +2,9 @@
 
 #include "GBADrawTools.h"
 
+extern "C" void asm_clear_screen_m4(volatile uint16* buffer, uint16 color) CODE_IN_IWRAM;
+extern "C" void asm_draw_line_m4(volatile uint16* buffer, uint8 color, uint16 x, uint16 y, uint16 endy) CODE_IN_IWRAM;
+
 /******** M3 Mode ************/
 
 // M3 mode use 16 bits color, but color only encore in 15 bits, 5 bit for each component (r, g, b)
@@ -56,6 +59,16 @@ void M4_clear_screen(volatile uint16* buffer, uint8 color) {
             M4_put_pixel(buffer, x, y, color);
         }
     }
+}
+
+void ASM_draw_vert_line(volatile uint16* buffer, uint8 color, uint16 x, uint16 y, uint16 endy)
+{
+    asm_draw_line_m4(buffer, color, x, y, endy);
+}
+
+void ASM_clear_screen(volatile uint16* buffer, uint16 color)
+{
+    asm_clear_screen_m4(buffer, color);
 }
 
 void draw_rect(volatile uint16* buffer, int posX, int posY, int width, int height, uint8 color)
