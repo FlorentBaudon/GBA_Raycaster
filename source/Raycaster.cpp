@@ -3,7 +3,7 @@
 #include "GBADrawTools.h"
 #include "GBA_VAR.h"
 
-extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
+extern "C" void asm_draw_line_m4(volatile uint16* buffer, uint8 color, uint16 x, uint16 y, uint16 endy) CODE_IN_IWRAM;
 
 Raycaster::Raycaster(int cellSize, int* map, int mapSizeX, int mapSizeY, float fov, int xResolution, int yResolution) 
 {

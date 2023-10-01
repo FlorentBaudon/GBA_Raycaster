@@ -5,13 +5,13 @@
 /******** M3 Mode ************/
 
 // M3 mode use 16 bits color, but color only encore in 15 bits, 5 bit for each component (r, g, b)
-unsigned short M3_make_color(unsigned char r, unsigned char g, unsigned char b)
+uint16 M3_make_color(uint8 r, uint8 g, uint8 b)
 {
 	return ( (r & 0x1f) | (g & 0x1f) << 5 | (b & 0x1f) << 10);
 }
 
 // Draw a pixel in M3 mode, no double buffer (front buffer point to the begin of VRAM)
-void M3_put_pixel(int x, int y, unsigned short color)
+void M3_put_pixel(int x, int y, uint16 color)
 {
 	FRONT_BUFFER[y*WIDTH+x] = color;
 }
@@ -19,9 +19,9 @@ void M3_put_pixel(int x, int y, unsigned short color)
 /******** M4 Mode ************/
 
 // M4 mode use 16 bit colors, but the color is stored in 8bit value named palette. We need to add color to the palette before use them, VRAM use the 8bit value to retrieved the color. We are limited to 256 colors
-unsigned char M4_add_color(unsigned char r, unsigned char g, unsigned char b, int &index)
+uint8 M4_add_color(uint8 r, uint8 g, uint8 b, int &index)
 {
-	unsigned short c = (r & 0x1f) | (g & 0x1f) << 5 | (b &0x1f) << 10;
+	uint16 c = (r & 0x1f) | (g & 0x1f) << 5 | (b &0x1f) << 10;
 
 	PALETTE[index] = c;
 
@@ -32,17 +32,17 @@ unsigned char M4_add_color(unsigned char r, unsigned char g, unsigned char b, in
 }
 
 // M4 mode have double buffering, we give the current buffer, the position, and the index of the color in the palette. we store two color in 16 bits, if coloumn is odd we store the colore index in the end of the 16 bit word
-void M4_put_pixel(volatile unsigned short* buffer, int x, int y, unsigned char color) 
+void M4_put_pixel(volatile uint16* buffer, int x, int y, uint8 color) 
 {
     /* find the offset which is the regular offset divided by two */
-    unsigned short offset = (y * WIDTH + x) >> 1;
+    uint16 offset = (y * WIDTH + x) >> 1;
 
     /* read the existing pixel which is there */
-    unsigned short pixel = buffer[offset];
+    uint16 pixel = buffer[offset];
 
     /* if it's an odd column */
     if (x & 1) {
-        /* put it in the left half of the unsigned short */
+        /* put it in the left half of the uint16 */
         buffer[offset] = (color << 8) | (pixel & 0x00ff);
     } else {
         /* it's even, put it in the left half */
@@ -50,15 +50,15 @@ void M4_put_pixel(volatile unsigned short* buffer, int x, int y, unsigned char c
     }
 }
 
-void M4_clear_screen(volatile unsigned short* buffer, unsigned char color) {
-    for (unsigned short y = 0; y < HEIGHT; y++) {
-        for (unsigned short x = 0; x < WIDTH; x++) {
+void M4_clear_screen(volatile uint16* buffer, uint8 color) {
+    for (uint16 y = 0; y < HEIGHT; y++) {
+        for (uint16 x = 0; x < WIDTH; x++) {
             M4_put_pixel(buffer, x, y, color);
         }
     }
 }
 
-void draw_rect(volatile unsigned short* buffer, int posX, int posY, int width, int height, unsigned char color)
+void draw_rect(volatile uint16* buffer, int posX, int posY, int width, int height, uint8 color)
 {
 	for(int y=0; y<height; y++)
 	{
@@ -69,7 +69,7 @@ void draw_rect(volatile unsigned short* buffer, int posX, int posY, int width, i
 	}
 }
 
-void draw_vert_line(volatile unsigned short* buffer, int start_x, int start_y, int en_x, int end_y, unsigned char color)
+void draw_vert_line(volatile uint16* buffer, int start_x, int start_y, int en_x, int end_y, uint8 color)
 {
 
 	for(int y=0; y< (end_y-start_y); y++)

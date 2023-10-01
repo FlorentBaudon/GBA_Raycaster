@@ -7,8 +7,8 @@
 
 using namespace gba;
 
-extern "C" void asm_clear_screen_m4(volatile unsigned short* buffer, unsigned char color) CODE_IN_IWRAM;
-extern "C" void asm_draw_line_m4(volatile unsigned short* buffer, unsigned char color, unsigned short x, unsigned short y, unsigned short endy) CODE_IN_IWRAM;
+extern "C" void asm_clear_screen_m4(volatile uint16* buffer, uint16 color) CODE_IN_IWRAM;
+extern "C" void asm_draw_line_m4(volatile uint16* buffer, uint8 color, uint16 x, uint16 y, uint16 endy) CODE_IN_IWRAM;
 
 
 vec2 world_forward = vec2(1,0);
@@ -36,7 +36,7 @@ int map[] =
 Raycaster* raycaster;
 
 
-unsigned volatile short* swap_buffer(unsigned volatile short* buffer_to_show)
+volatile uint16* swap_buffer(volatile uint16* buffer_to_show)
 {
 	//On affiche le buffer dans lequel on a ecrit precedentment et on retourne l'autre buffer pour ecrire dedans au prochain cycle
 	if(buffer_to_show == FRONT_BUFFER)

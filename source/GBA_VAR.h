@@ -3,7 +3,7 @@
 typedef unsigned char      uint8;
 typedef unsigned short     uint16;
 typedef unsigned long      uint32;
-
+typedef unsigned short     FIXED;
 // Registers
 #define DISPLAYCONTROL	*((volatile unsigned long*) 	 0x04000000)
 #define KEYSTATE		*((volatile unsigned long*) 	 0x04000130)

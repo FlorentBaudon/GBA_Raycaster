@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GBA_VAR.h"
+
 #define PI 3.141592653f//58979323846264338327950288
 #define DEG2RAD(x) ( (x)*( PI/ 180.f ) )
 #define RAD2DEG(x) ( (x)*( 180.f/ PI ) )
@@ -32,9 +34,9 @@ namespace gba
     };
 
     //convert functions
-    unsigned short floatToFixed(float n);
-    float fixedToFloat(unsigned short n);
-    unsigned short radToLut(float a);
+    uint16 floatToFixed(float n);
+    float fixedToFloat(uint16 n);
+    uint16 radToLut(float a);
 
     float sin(float a);
     float cos(float a);

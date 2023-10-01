@@ -41,23 +41,23 @@ float gba::length(vec2 v)
     return sqrt(o);
 }
 
-unsigned short gba::floatToFixed(float n)
+uint16 gba::floatToFixed(float n)
 {
-    return (unsigned short)(n*(1 << FIXEDPOINT));
+    return (uint16)(n*(1 << FIXEDPOINT));
 }
 
-float gba::fixedToFloat(unsigned short n)
+float gba::fixedToFloat(uint16 n)
 {
     return (float)((short)n)/(1 << FIXEDPOINT);
 }
 
-unsigned short gba::radToLut(float angle)
+uint16 gba::radToLut(float angle)
 {
     // À optimiser
     short a = (short) (angle / (2 * PI / lut_size));
     a%=lut_size;
     a = (a>=0) ? a : (lut_size + a);
-    return (unsigned short) a;
+    return (uint16) a;
 }
 
 gba::vec2 gba::rotateVectorRad(vec2 v, float a) 
