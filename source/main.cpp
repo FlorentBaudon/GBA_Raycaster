@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "Raycaster.h"
 
-using namespace gba;
+using namespace m_gba;
 
 extern "C" void asm_clear_screen_m4(volatile uint16* buffer, uint16 color) CODE_IN_IWRAM;
 extern "C" void asm_draw_line_m4(volatile uint16* buffer, uint8 color, uint16 x, uint16 y, uint16 endy) CODE_IN_IWRAM;

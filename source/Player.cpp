@@ -2,7 +2,7 @@
 
 #include "Player.h"
 
-using namespace gba;
+using namespace m_gba;
 
 Player::Player(vec2 position, vec2 worldForward, vec2 worldRight, float angle) 
 {

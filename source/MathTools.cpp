@@ -3,22 +3,22 @@
 #include <math.h>
 #include <stdio.h>
 
-int gba::floor(float n) 
+int m_gba::floor(float n) 
 {
     return (int)n;
 }
 
-float gba::cos(float a) 
+float m_gba::cos(float a) 
 {
-    return gba::fixedToFloat(sin_table[gba::radToLut(a + PI/2)]);
+    return m_gba::fixedToFloat(sin_table[m_gba::radToLut(a + PI/2)]);
 }
 
-float gba::sin(float a) //angle in radian
+float m_gba::sin(float a) //angle in radian
 {
-    return gba::fixedToFloat(sin_table[gba::radToLut(a)]);
+    return m_gba::fixedToFloat(sin_table[m_gba::radToLut(a)]);
 }
 
-float gba::tan(float a)
+float m_gba::tan(float a)
 {
     return sin(a)/cos(a);
 }
@@ -35,23 +35,23 @@ float gba::tan(float a)
 //     return x;
 // }
 
-float gba::length(vec2 v) 
+float m_gba::length(vec2 v) 
 {
     float o = (v.x*v.x) + (v.y*v.y);
     return sqrt(o);
 }
 
-uint16 gba::floatToFixed(float n)
+uint16 m_gba::floatToFixed(float n)
 {
     return (uint16)(n*(1 << FIXEDPOINT));
 }
 
-float gba::fixedToFloat(uint16 n)
+float m_gba::fixedToFloat(uint16 n)
 {
     return (float)((short)n)/(1 << FIXEDPOINT);
 }
 
-uint16 gba::radToLut(float angle)
+uint16 m_gba::radToLut(float angle)
 {
     // À optimiser
     short a = (short) (angle / (2 * PI / lut_size));
@@ -60,10 +60,10 @@ uint16 gba::radToLut(float angle)
     return (uint16) a;
 }
 
-gba::vec2 gba::rotateVectorRad(vec2 v, float a) 
+m_gba::vec2 m_gba::rotateVectorRad(vec2 v, float a) 
 {
-    float s = gba::sin(a);
-    float c = gba::cos(a);
+    float s = m_gba::sin(a);
+    float c = m_gba::cos(a);
     return vec2(c * v.x  - s * v.y, s * v.x - c * v.y);
 }
 

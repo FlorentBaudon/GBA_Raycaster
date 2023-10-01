@@ -7,7 +7,7 @@
 #define RAD2DEG(x) ( (x)*( 180.f/ PI ) )
 #define FIXEDPOINT 12
 
-namespace gba 
+namespace m_gba 
 {
     struct vec2 
     {
