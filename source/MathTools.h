@@ -41,6 +41,8 @@ namespace m_gba
     float sin(float a);
     float cos(float a);
     float tan(float a);
+    uint32 sqrti(uint32 num);
+    int div(int num, int denom);
     int floor(float n);
     float length(vec2 v);
     vec2 rotateVectorRad(vec2 v, float a);

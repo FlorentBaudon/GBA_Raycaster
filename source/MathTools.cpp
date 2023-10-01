@@ -23,6 +23,16 @@ float m_gba::tan(float a)
     return sin(a)/cos(a);
 }
 
+ uint32 m_gba::sqrti(uint32 num)
+{  
+    asm ("swi 0x08");
+}
+
+int m_gba::div(int num, int denom)
+{   
+    asm("swi 0x06");   
+}
+
 // float sqrt(float a) 
 // {
 //     float x,
@@ -37,7 +47,8 @@ float m_gba::tan(float a)
 
 float m_gba::length(vec2 v) 
 {
-    float o = (v.x*v.x) + (v.y*v.y);
+    uint32 o = uint32((v.x*v.x) + (v.y*v.y));
+
     return sqrt(o);
 }
 
