@@ -97,14 +97,14 @@ int main()
 
 	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
-	ASM_clear_screen(FRONT_BUFFER, black);
-	ASM_clear_screen(BACK_BUFFER, black);
+	M4_clear_screen(FRONT_BUFFER, black);
+	M4_clear_screen(BACK_BUFFER, black);
 
 	int pX = 20, pY = 10;
 
 	while(1)
 	{
-		ASM_clear_screen(current_buffer, black);
+		M4_clear_screen(current_buffer, black);
 		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 		process_input(player);
 
