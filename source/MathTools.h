@@ -33,6 +33,30 @@ namespace m_gba
         }
     };
 
+    struct Fvec2 
+    {
+        FIXED x;
+        FIXED y;
+        Fvec2()
+        {
+            x = 0;
+            y = 0;
+        }
+        Fvec2(FIXED _x, FIXED _y) 
+        {
+            x = _x;
+            y = _y;
+        }
+        Fvec2 operator+(const Fvec2 a)
+        {
+            return Fvec2(x+a.x, y+a.y);
+        }
+        Fvec2 operator-(const Fvec2 a)
+        {
+            return Fvec2(x-a.x, y-a.y);
+        }
+    };
+
     //convert functions
     uint16 floatToFixed(float n);
     float fixedToFloat(uint16 n);
@@ -41,10 +65,10 @@ namespace m_gba
     float sin(float a);
     float cos(float a);
     float tan(float a);
-    uint32 sqrti(uint32 num);
-    int div(int num, int denom);
+    // uint32 sqrt(uint32 a);
     int floor(float n);
     float length(vec2 v);
     vec2 rotateVectorRad(vec2 v, float a);
     // float sqrt(float a);
+    uint32 fred_sqrt(uint32 x);
 }

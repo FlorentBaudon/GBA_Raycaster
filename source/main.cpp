@@ -75,7 +75,7 @@ void process_input (Player* p)
 			//d.x+=s;
 			player->turn( -DEG2RAD(10.0f) );
 		}
-
+		player->turn(  DEG2RAD(1.0f) );
 		player->move(d);
 }
 
@@ -97,14 +97,14 @@ int main()
 
 	unsigned volatile short* current_buffer = FRONT_BUFFER;
 
-	M4_clear_screen(FRONT_BUFFER, black);
-	M4_clear_screen(BACK_BUFFER, black);
+	ASM_clear_screen(FRONT_BUFFER, black);
+	ASM_clear_screen(BACK_BUFFER, black);
 
 	int pX = 20, pY = 10;
 
 	while(1)
 	{
-		M4_clear_screen(current_buffer, black);
+		ASM_clear_screen(current_buffer, black);
 		raycaster->scanEnv(current_buffer, player->position, player->angle, fov);
 		process_input(player);
 
